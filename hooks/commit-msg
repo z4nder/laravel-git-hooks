@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Validar o nome da branch com o seguinte pattern:
+# * company-issue-descrição
+
+# Validar se a branch tem uma ISSUE existente
+
+# Validar a mensagem do commit
+# * issue: mensagem
+# * Se a mesnagem do commit contem a issue_id manda
+# * Caso não ele extrai da branch e adiciona na mensagem
+
+REGEX_ISSUE_ID="[a-zA-Z0-9,\.\_\-]+-[0-9]+"
+
+BBlue='\033[1;34m'
+BRed='\033[1;31m'
+
+BRANCH_NAME=$(git symbolic-ref --short HEAD)
+
+# Validate company prefix
+if [[ $BRANCH_NAME != *"company-"*  ]]; then
+    echo -e "${BRed}Coloque o prefixo "company" no nome da branch: 'company-ISSUE_ID-descricao'"
+    exit 1
+fi
+
+BRANCH_PREFIX=$(echo "$BRANCH_NAME" | grep -o -E "$REGEX_ISSUE_ID")
+ISSUE_ID=$(echo $BRANCH_PREFIX | sed s/"company-"//)
+
+# Validate ISSUE ID
+if [ -z "$BRANCH_PREFIX" ]; then
+    echo -e "${BRed}Coloque o ID da ISSUE referente no nome da branch: 'company-ISSUE_ID-descricao'"
+    exit 1
+fi
+
+# Extract commit message
+COMMIT_MESSAGE=$(cat "$1")
+COMMIT_ISSUE=$(echo $COMMIT_MESSAGE | grep -oE '^[0-9]+')
+
+if [[ $COMMIT_MESSAGE == $ISSUE_ID* ]]; then
+    echo "Certinho:"
+    exit 0
+fi
+
+echo "$ISSUE_ID: $COMMIT_MESSAGE" >$1

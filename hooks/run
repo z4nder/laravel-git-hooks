@@ -1,0 +1,16 @@
+#!/bin/sh
+
+npm install husky --save-dev
+npx husky install
+npm pkg set scripts.prepare="husky install"
+
+# yarn only
+npm pkg set scripts.postinstall="husky install"
+
+echo "1. Configurando pre-push"
+curl -s -o .husky/pre-push "https://raw.githubusercontent.com/z4nder/laravel-git-hooks/master/hooks/pre-push"
+chmod +x .husky/pre-push
+
+echo "2. Configurando commit-msg"
+curl -s -o .husky/commit-msg "https://raw.githubusercontent.com/z4nder/laravel-git-hooks/master/hooks/commit-msg"
+chmod +x .husky/commit-msg

@@ -1,13 +1,8 @@
 #!/bin/bash
 
-# Colors
-NC='\033[0m'
-BBlue='\033[1;34m'
-BRed='\033[1;33m'
-
 echo "Configurando ambiente"
 
-echo "\n${BBlue}Instlando Husky Hooks na pasta \".husky\" \n${NC}"
+echo "Instlando Husky Hooks na pasta \".husky\" \n"
 sh -c "$(curl -fsSl https://raw.githubusercontent.com/z4nder/laravel-git-hooks/master/hooks/run)"
 
-echo "\n${BBlue}Finalizado! 😎\n${NC}"
+echo "Finalizado! 😎\n"
